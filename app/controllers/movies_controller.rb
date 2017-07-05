@@ -11,15 +11,24 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
-  end
+    @sorted_col = "??"
+    if params[:sort_by] == "title"
+      @movies = Movie.reorder(params[:sort_by])
+      @sorted_col = "title"
+    elsif params[:sort_by] == "release_date"
+      @movies = Movie.reorder(params[:sort_by])
+      @sorted_col = "date"
+    else
+      @movies = Movie.all
+    end
+end
 
   def new
     # default: render 'new' template
   end
 
   def create
-    @movie = Movie.create!(movie_params)
+    @movie = Movie.create!(params[:movie])
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
   end
@@ -30,7 +39,7 @@ class MoviesController < ApplicationController
 
   def update
     @movie = Movie.find params[:id]
-    @movie.update_attributes!(movie_params)
+    @movie.update_attributes!(params[:movie])
     flash[:notice] = "#{@movie.title} was successfully updated."
     redirect_to movie_path(@movie)
   end
