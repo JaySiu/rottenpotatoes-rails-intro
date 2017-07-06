@@ -31,7 +31,6 @@ class MoviesController < ApplicationController
        @sorted_col = "date"
     else
        @movies = Movie.all
-       session[:first_visit] = "true"
     end
 
     if !(params[:ratings].nil?)
@@ -52,6 +51,10 @@ class MoviesController < ApplicationController
     end
    # debugger
    # session.clear
+    if session[:ratings] && session[:sort_by] && session[:sort_by] != params[:sort_by]
+      redirect_to movies_path(:sort_by => session[:sort_by], :ratings => session[:ratings])
+      #refirect_to original_url
+    end
   end
 
   def new
