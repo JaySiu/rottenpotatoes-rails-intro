@@ -49,6 +49,8 @@ class MoviesController < ApplicationController
       end
       @movies = @filtered_movie_list
     end
+    params[:utf8] = nil
+    params[:commit] = nil
    # debugger
    # session.clear
    # if session[:ratings] && session[:sort_by] && (session[:sort_by] != params[:sort_by] || session[:ratings] != params[:ratings])
