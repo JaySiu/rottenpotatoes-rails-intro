@@ -51,7 +51,7 @@ class MoviesController < ApplicationController
     end
    # debugger
    # session.clear
-    if session[:ratings] && session[:sort_by] && session[:sort_by] != params[:sort_by]
+    if session[:ratings] && session[:sort_by] && (session[:sort_by] != params[:sort_by] || session[:ratings] != params[:ratings])
       redirect_to movies_path(:sort_by => session[:sort_by], :ratings => session[:ratings])
       #refirect_to original_url
     end
