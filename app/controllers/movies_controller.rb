@@ -12,7 +12,6 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.get_ratings
-    original_url = movies_path(params)
 
     if params[:sort_by] == "title"
      # @movies = Movie.re_order(params[:sort_by])
@@ -32,6 +31,7 @@ class MoviesController < ApplicationController
        @sorted_col = "date"
     else
        @movies = Movie.all
+       session[:first_visit] = "true"
     end
 
     if !(params[:ratings].nil?)
@@ -52,15 +52,6 @@ class MoviesController < ApplicationController
     end
    # debugger
    # session.clear
-    params[:utf8] = nil
-    params[:commit] = nil
-
-    if ((movies_path(params) != original_url) && (movies_path(params) != session[:url]))
-       session[:url] = movies_path(params)
-       redirect_to movies_path(params)
-    else
-       session[:url] = nil
-    end
   end
 
   def new

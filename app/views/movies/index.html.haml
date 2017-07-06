@@ -4,11 +4,11 @@
   Include:
   - @all_ratings.each do |rating|
     = rating
-    - if @checked_keys.nil?
-      - check_t_f = true
-    - else 
-      - check_t_f = (@checked_keys.include?(rating))? true : false
-    = check_box_tag "ratings[#{rating}]", 1, check_t_f
+    - if !(@checked_keys.empty?)
+      - checked = @checked_keys.include?(rating)? true : false
+    - else
+      - checked = true
+    = check_box_tag "ratings[#{rating}]", 1, checked, :id => "ratings_#{rating}"
   = submit_tag 'Refresh', {:id => "ratings_submit"}
 
 %table#movies
