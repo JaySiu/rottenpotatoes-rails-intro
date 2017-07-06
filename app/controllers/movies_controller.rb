@@ -11,29 +11,46 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @sorted_col = "??"
     @all_ratings = Movie.get_ratings
+  
     if params[:sort_by] == "title"
-      @movies = Movie.re_order(params[:sort_by])
-      @sorted_col = "title"
+     # @movies = Movie.re_order(params[:sort_by])
+     # @sorted_col = "title"
+      session[:sort_by] = "title"
     elsif params[:sort_by] == "release_date"
-      @movies = Movie.re_order(params[:sort_by])
-      @sorted_col = "date"
-    else
-      @movies = Movie.all
+     # @movies = Movie.re_order(params[:sort_by])
+     # @sorted_col = "date"
+      session[:sort_by] = "date"
     end
-    @checked_keys = Array.new
+
+    if session[:sort_by] == "title"
+       @movies = Movie.re_order("title")
+       @sorted_col = "title"
+    elsif session[:sort_by] == "date"
+       @movies = Movie.re_order("release_date")
+       @sorted_col = "date"
+    else
+       @movies = Movie.all
+    end
+
     if !(params[:ratings].nil?)
+      session[:ratings] = params[:ratings]
+    end
+ 
+    if session[:ratings]
+      @checked_keys = session[:ratings].keys
       @filtered_movie_list = Array.new
       @movies.each do |movie|
-        if((params[:ratings].keys).include? movie[:rating])
+        if @checked_keys.include? movie[:rating]
           @filtered_movie_list.push movie
-          @checked_keys.push movie[:rating]
         end
       end
       @movies = @filtered_movie_list
+    else
+      @checked_keys = Array.new
     end
    # debugger
+   # session.clear
   end
 
   def new
@@ -41,7 +58,7 @@ class MoviesController < ApplicationController
   end
 
   def create
-    @movie = Movie.create!(params[:movie])
+    @movie = Movie.create!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
   end
@@ -52,7 +69,7 @@ class MoviesController < ApplicationController
 
   def update
     @movie = Movie.find params[:id]
-    @movie.update_attributes!(params[:movie])
+    @movie.update_attributes!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully updated."
     redirect_to movie_path(@movie)
   end
