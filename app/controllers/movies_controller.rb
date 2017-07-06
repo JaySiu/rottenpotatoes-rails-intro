@@ -23,8 +23,8 @@ class MoviesController < ApplicationController
       @movies = Movie.all
     end
     @checked_keys = Array.new
-    @filtered_movie_list = Array.new
     if !(params[:ratings].nil?)
+      @filtered_movie_list = Array.new
       @movies.each do |movie|
         if((params[:ratings].keys).include? movie[:rating])
           @filtered_movie_list.push movie
