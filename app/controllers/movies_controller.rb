@@ -36,7 +36,9 @@ class MoviesController < ApplicationController
     if !(params[:ratings].nil?)
       session[:ratings] = params[:ratings]
     end
- 
+
+    @checked_keys = Array.new
+
     if session[:ratings]
       @checked_keys = session[:ratings].keys
       @filtered_movie_list = Array.new
@@ -46,8 +48,6 @@ class MoviesController < ApplicationController
         end
       end
       @movies = @filtered_movie_list
-    else
-      @checked_keys = Array.new
     end
    # debugger
    # session.clear
