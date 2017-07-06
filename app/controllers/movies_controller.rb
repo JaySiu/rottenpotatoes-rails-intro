@@ -12,16 +12,29 @@ class MoviesController < ApplicationController
 
   def index
     @sorted_col = "??"
+    @all_ratings = Movie.get_ratings
     if params[:sort_by] == "title"
-      @movies = Movie.reorder(params[:sort_by])
+      @movies = Movie.re_order(params[:sort_by])
       @sorted_col = "title"
     elsif params[:sort_by] == "release_date"
-      @movies = Movie.reorder(params[:sort_by])
+      @movies = Movie.re_order(params[:sort_by])
       @sorted_col = "date"
     else
       @movies = Movie.all
     end
-end
+    @checked_keys = Array.new
+    @filtered_movie_list = Array.new
+    if !(params[:ratings].nil?)
+      @movies.each do |movie|
+        if((params[:ratings].keys).include? movie[:rating])
+          @filtered_movie_list.push movie
+          @checked_keys.push movie[:rating]
+        end
+      end
+      @movies = @filtered_movie_list
+    end
+   # debugger
+  end
 
   def new
     # default: render 'new' template
