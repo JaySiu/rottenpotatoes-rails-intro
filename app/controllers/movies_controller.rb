@@ -49,14 +49,23 @@ class MoviesController < ApplicationController
       end
       @movies = @filtered_movie_list
     end
-    params[:utf8] = nil
-    params[:commit] = nil
+
    # debugger
    # session.clear
    # if session[:ratings] && session[:sort_by] && (session[:sort_by] != params[:sort_by] || session[:ratings] != params[:ratings])
-    if (!(params.has_key?(:sort_by)) || !(params.has_key?(:ratings))) && session[:sort_by] && session[:ratings]  
+    if session[:sort_by] && session[:ratings] && (!(params.has_key?(:sort_by)) || !(params.has_key?(:ratings)))
       redirect_to movies_path(:sort_by => session[:sort_by], :ratings => session[:ratings])
       #refirect_to original_url
+    elsif session[:sort_by] && !session[:ratings] && !(params.has_key?(:sort_by))
+      params[:utf8] = nil
+      params[:commit] = nil
+      redirect_to movies_path(:sort_by => session[:sort_by])
+    elsif !session[:sort_by] && session[:ratings] && !(params.has_key?(:ratings))
+      params[:utf8] = nil
+      params[:commit] = nil
+      redirect_to movies_path(:ratings => session[:ratings])
+    else 
+      #redirect_to movies_path(:id => session[:sort_by], :ratings => session[:ratings])
     end
   end
 
