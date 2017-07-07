@@ -50,20 +50,30 @@ class MoviesController < ApplicationController
       @movies = @filtered_movie_list
     end
 
-    params[:utf8] = nil
-    params[:commit] = nil
+    if(params[:sort_by] == nil  && params[:ratings] == nil)
+      if(session[:sort_by] || session[:ratings])
+        redirect_to movies_path(:sort_by => session[:sort_by], :ratings => session[:ratings])
+      end
+    end
    # debugger
    # session.clear
    # if session[:ratings] && session[:sort_by] && (session[:sort_by] != params[:sort_by] || session[:ratings] != params[:ratings])
-    if session[:sort_by] && session[:ratings] && (!(params.has_key?(:sort_by)) || !(params.has_key?(:ratings)))
-      redirect_to movies_path(:sort_by => session[:sort_by], :ratings => session[:ratings])
-      #refirect_to original_url
-    elsif session[:sort_by] && !session[:ratings] && !(params.has_key?(:sort_by))
-      redirect_to movies_path(:sort_by => session[:sort_by])
-    elsif !session[:sort_by] && session[:ratings] && !(params.has_key?(:ratings))
-      redirect_to movies_path(:ratings => session[:ratings])
-      #redirect_to movies_path(:id => session[:sort_by], :ratings => session[:ratings])
-    end
+   # if !(params.has_key?(:sort_by))
+    #  if session[:sort_by]
+    #    redirect_to movies_path(:sort_by => session[:sort_by], :ratings => session[:ratings])	
+    #  else
+    #    session[:sort_by] = "id"
+    #  end
+   # end
+
+   # if !(params.has_key?(:ratings))
+    #  if session[:ratings] 
+    #    redirect_to movies_path(:sort_by => session[:sort_by], :ratings => session[:ratings])
+    #  else
+    #    session[:rating] = {"G"=>"1", "PG"=>"1", "PG-13"=>"1", "R"=>"1"}
+    #  end
+   # end
+
   end
 
   def new
